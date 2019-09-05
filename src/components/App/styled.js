@@ -16,12 +16,3 @@ export const Container = styled.div`
 export const Title = styled.h3`
   font-size: 32px;
 `;
-
-export const Button = styled.button`
-  width: 100%;
-  padding: 7.5px 15px;
-`;
-
-export const Form = styled.form`
-  width: 50%;
-`;

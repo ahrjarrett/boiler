@@ -1,18 +1,24 @@
-import React from "react";
-import styled from "styled-components/macro";
-import * as S from "styled";
+import React, { createContext } from "react";
+
+import Form from "components/Form";
+import { useFocus, useAppState } from "hooks";
+import { DispatchContext } from "context";
+import { APP_NAME } from "config";
+import * as S from "./styled";
+
+const initialState = { focused: false };
 
 export default function App() {
-  return (
-    <S.Outermost>
-      <S.Container>
-        <S.Title>Boiler</S.Title>
+  const { dispatch } = useAppState();
 
-        <S.Form>
-          <input placeholder="I focus" />
-          <S.Button>Click me to focus input</S.Button>
-        </S.Form>
-      </S.Container>
-    </S.Outermost>
+  return (
+    <DispatchContext.Provider value={dispatch}>
+      <S.Outermost>
+        <S.Container>
+          <S.Title>{APP_NAME}</S.Title>
+          <Form />
+        </S.Container>
+      </S.Outermost>
+    </DispatchContext.Provider>
   );
 }
