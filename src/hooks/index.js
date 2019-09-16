@@ -1,35 +1,21 @@
-import React, { useCallback, useEffect, useReducer, useRef } from "react";
-import { isEmpty, isEqual } from "lodash";
+import { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 
-export function useAutofocus(inputId) {
-  const inputRef = useRef();
-  const handleClick = e => e.preventDefault();
-
-  useEffect(() => {
-    inputRef.current = document.getElementById(inputId);
-  }, [inputId]);
+export function useAutofocus(elementId) {
+  const inputRef = useRef(elementId);
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, [inputRef]);
+    inputRef.current = document.getElementById(elementId);
+  }, [elementId]);
 
-  return handleClick;
+  useEffect(() => {
+    if (inputRef.current) inputRef.current.focus();
+  });
+
+  return inputRef.current;
 }
 
-export function useAppState() {
-  const [state, dispatch] = useReducer(
-    function(state, { type }) {
-      switch (type) {
-        case "TOGGLE_FOCUS":
-          return { ...state, focused: !state.focused };
-        default:
-          throw new Error(`Reducer error: no action with type found:`);
-      }
-    },
-    { focused: false },
-    x => x,
-    "id"
-  );
-
-  return { state, dispatch };
+export function useAutofocusFromStore() {
+  const { focusedElement } = useSelector(state => state.ui);
+  return useAutofocus(focusedElement);
 }

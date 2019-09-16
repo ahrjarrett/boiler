@@ -1,9 +1,9 @@
-const initialState = { pending: false };
+const initialState = { focusedElement: null };
 
-export default function(state = initialState, { type }) {
+export default function(state = initialState, { type, payload }) {
   switch (type) {
     case "TOGGLE_FOCUS":
-      return state;
+      return { ...state, focusedElement: payload };
     default:
       return state;
     //throw new Error(

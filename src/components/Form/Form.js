@@ -1,36 +1,28 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { DispatchContext } from "context";
 import * as hooks from "hooks";
-
 import * as S from "./styled";
 
-const inputId = "focus_me";
+export default function Form({ autofocus }) {
+  const dispatch = useDispatch();
+  const { focusedElement } = useSelector(state => state.ui);
 
-export default function Form() {
-  const dispatch = useContext(DispatchContext);
+  hooks.useAutofocusFromStore();
 
   const handleClick = e => {
-    console.log("e:", e);
-    console.log("\n\n\n\n\n");
-    console.log("inside handleclick");
-
     e.preventDefault();
-    return dispatch({ type: "TOGGLE_FOCUS" });
+    return dispatch({ type: "TOGGLE_FOCUS", payload: autofocus });
   };
 
-  hooks.useAutofocus(inputId);
+  useEffect(() => {
+    dispatch({ type: "TOGGLE_FOCUS", payload: autofocus });
+  }, [dispatch]);
 
   return (
     <S.Form>
-      <input id={inputId} placeholder="I focus" />
+      <input id={autofocus} placeholder="I focus" />
       <S.Button onClick={handleClick}>Click me to focus input</S.Button>
-      <ShowIsFocused />
     </S.Form>
   );
-}
-
-function ShowIsFocused() {
-  const { state } = hooks.useAppState();
-  return <p>{String(state.focused)}</p>;
 }

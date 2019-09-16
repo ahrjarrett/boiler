@@ -8,7 +8,6 @@ import App from "components/App";
 import ErrorBoundary from "components/ErrorBoundary";
 import Router from "components/Router";
 import configureStore from "configureStore";
-import { NODE_ENV } from "config";
 import * as serviceWorker from "./serviceWorker";
 
 const history = createBrowserHistory();
