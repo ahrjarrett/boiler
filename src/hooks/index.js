@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
+export { useDraggableColumn, useDraggableCard } from "./useDraggable";
+
 export function useAutofocus(elementId) {
   const inputRef = useRef(elementId);
 
