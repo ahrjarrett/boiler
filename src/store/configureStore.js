@@ -2,9 +2,8 @@ import { applyMiddleware, compose, createStore } from "redux";
 import { routerMiddleware } from "connected-react-router";
 import reduxThunk from "redux-thunk";
 
-import createReducer from "reducers";
+import createReducer from "store/reducers";
 import { APP_NAME, APP_HOST, NODE_ENV } from "config";
-import { initialState } from "store";
 
 const devToolOpts = () => ({
   shouldHotReload: false,
@@ -18,7 +17,6 @@ const reduxDevToolOptions = env => ({
 });
 
 const devOpts = { ...reduxDevToolOptions(NODE_ENV), ...devToolOpts() };
-console.log("\n\n\ndevops:", devOpts);
 
 export default function configureStore(history) {
   const middlewares = [routerMiddleware(history), reduxThunk];

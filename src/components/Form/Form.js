@@ -1,23 +1,26 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useEffect } from "react";
+import { useDispatch } from "react-redux";
 
+import * as types from "store/types";
 import * as hooks from "hooks";
 import * as S from "./styled";
 
 export default function Form({ autofocus }) {
   const dispatch = useDispatch();
-  const { focusedElement } = useSelector(state => state.ui);
 
-  hooks.useAutofocusFromStore();
+  hooks.useFocus();
 
-  const handleClick = e => {
-    e.preventDefault();
-    return dispatch({ type: "TOGGLE_FOCUS", payload: autofocus });
-  };
+  const handleClick = useCallback(
+    e => {
+      e.preventDefault();
+      dispatch({ type: types.TOGGLE_FOCUS, payload: autofocus });
+    },
+    [autofocus, dispatch]
+  );
 
   useEffect(() => {
-    dispatch({ type: "TOGGLE_FOCUS", payload: autofocus });
-  }, [dispatch]);
+    dispatch({ type: types.TOGGLE_FOCUS, payload: autofocus });
+  }, [autofocus, dispatch]);
 
   return (
     <S.Form>

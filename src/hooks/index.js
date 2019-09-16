@@ -15,7 +15,7 @@ export function useAutofocus(elementId) {
   return inputRef.current;
 }
 
-export function useAutofocusFromStore() {
+export function useFocus() {
   const { focusedElement } = useSelector(state => state.ui);
   return useAutofocus(focusedElement);
 }

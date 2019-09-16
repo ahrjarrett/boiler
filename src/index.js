@@ -1,13 +1,12 @@
-import React, { lazy, Suspense } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "connected-react-router";
 import { createBrowserHistory } from "history";
 
-import App from "components/App";
 import ErrorBoundary from "components/ErrorBoundary";
 import Router from "components/Router";
-import configureStore from "configureStore";
+import configureStore from "store/configureStore";
 import * as serviceWorker from "./serviceWorker";
 
 const history = createBrowserHistory();
