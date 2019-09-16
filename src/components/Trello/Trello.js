@@ -5,7 +5,7 @@ import * as hooks from "hooks";
 import * as S from "./styled";
 
 function Column({ column, index, moveColumn }) {
-  const { ref, opacity, index: newIndex } = hooks.useDraggableColumn({
+  const { ref, opacity } = hooks.useDraggableColumn({
     index,
     id: index,
     column,
@@ -13,7 +13,7 @@ function Column({ column, index, moveColumn }) {
   });
 
   return (
-    <S.Column>
+    <S.Column opacity={opacity}>
       <div className="dropzone" id={index} ref={ref}>
         <S.Header color={column.color}>{column.header}</S.Header>
         <Cards data={column.cards} />
@@ -23,7 +23,7 @@ function Column({ column, index, moveColumn }) {
 }
 
 function Card({ index, id, card, moveCard }) {
-  const { ref, opacity, index: newIndex } = hooks.useDraggableCard({
+  const { ref, opacity } = hooks.useDraggableCard({
     index,
     id,
     card,
@@ -32,7 +32,7 @@ function Card({ index, id, card, moveCard }) {
 
   const keys = Object.keys(card).filter(k => typeof card[k] === "string");
   return (
-    <S.Card>
+    <S.Card opacity={opacity}>
       <div ref={ref}>
         {keys.map(key => (
           <p key={card[key]}>
@@ -49,14 +49,9 @@ function Cards({ data }) {
 
   const moveCard = useCallback(
     (dragIndex, hoverIndex) => {
-      let newOrder = clone(order);
-      [newOrder[dragIndex], newOrder[hoverIndex]] = [
-        newOrder[hoverIndex],
-        newOrder[dragIndex]
-      ];
-
-      const dragCard = data[dragIndex];
-      setOrder(newOrder);
+      let _new = clone(order);
+      [_new[dragIndex], _new[hoverIndex]] = [_new[hoverIndex], _new[dragIndex]];
+      setOrder(_new);
     },
     [order]
   );
@@ -82,14 +77,9 @@ function Columns({ data }) {
 
   const moveColumn = useCallback(
     (dragIndex, hoverIndex) => {
-      let newOrder = clone(order);
-      [newOrder[dragIndex], newOrder[hoverIndex]] = [
-        newOrder[hoverIndex],
-        newOrder[dragIndex]
-      ];
-
-      const dragColumn = data[dragIndex];
-      setOrder(newOrder);
+      let _new = clone(order);
+      [_new[dragIndex], _new[hoverIndex]] = [_new[hoverIndex], _new[dragIndex]];
+      setOrder(_new);
     },
     [order]
   );

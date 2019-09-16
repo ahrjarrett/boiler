@@ -10,6 +10,7 @@ export const Column = styled.div`
   flex-direction: column;
   width: 25%;
   margin: 0 12.5px;
+  opacity: ${({ opacity }) => opacity};
   &:first-child {
     margin-left: 25px;
   }
@@ -29,4 +30,5 @@ export const Cards = styled.div``;
 
 export const Card = styled.div`
   outline: 1px solid orange;
+  opacity: ${({ opacity }) => opacity};
 `;
