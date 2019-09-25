@@ -1,23 +1,58 @@
-import { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useRef } from 'react'
+import * as R from 'ramda'
 
-export { useDraggableColumn, useDraggableCard } from "./useDraggable";
+import * as utils from 'utils'
 
-export function useAutofocus(elementId) {
-  const inputRef = useRef(elementId);
+let count = 0
 
-  useEffect(() => {
-    inputRef.current = document.getElementById(elementId);
-  }, [elementId]);
+// CONFIG:
+const defaultOptions = { quantity: { users: 3, accounts: 12, transactions: 90 } }
+const metaProps = ['id', 'createdAt', 'updatedAt', 'index']
+const dataProps = ['name', 'transactions', 'color', 'company', 'email', 'phone', 'username']
+const makeProps = props => R.union(metaProps, props)
 
-  useEffect(() => {
-    if (inputRef.current) inputRef.current.focus();
-  });
+const nextEntity = list => list.filter((entity, index) => index === count++)[0]
 
-  return inputRef.current;
-}
+const pluckEntityWithProps = props => R.project(makeProps(props))
 
-export function useFocus() {
-  const { focusedElement } = useSelector(state => state.ui);
-  return useAutofocus(focusedElement);
+const normalizeEntity = entity => R.objOf(entity.id, entity)
+const normalizeEntities = R.map(normalizeEntity)
+
+export function useData(options = defaultOptions, props = dataProps) {
+  //const pluckEntities = pluckEntityWithProps(props)
+  //const rawEntities = entitiesThroughN(quantity)
+  //const entityList = pluckEntities(rawEntities)
+  //const normalizedList = normalizeEntities(entityList)
+  ////const entities = R.mergeAll(normalizedList)
+  //const withTransactions = R.map(entity =>
+  //  //utils.transactionsForEntity(entity, entity.accounts[0])
+  //  utils.transactionsForEntity(entity, 1231312)
+  //)
+  //const withAccounts = R.map(entity => utils.accountsForEntity(entity))
+  //const entities = R.mergeAll([
+  //  ...normalizedList,
+  //  ...R.map(withTransactions, normalizedList),
+  //  ...R.map(withAccounts, normalizedList),
+  //])
+
+  const { quantity } = options
+
+  const users = R.project([...metaProps, ...dataProps], utils.usersThroughN(quantity.users))
+  const accounts = utils.accountsThroughN(users[0])(quantity.accounts)
+  const transactions = utils.transactionsThroughN(accounts[0])(quantity.transactions)
+  //const users = R.project([...metaProps, ...dataProps], utils.usersThroughN(quantity.users))
+  //const nextUser = nextEntity(users)
+  //const accounts = utils.accountsThroughN(nextUser())(quantity.accounts)
+  //const nextAcct = nextEntity(accounts)
+  //const transactions = utils.transactionsThroughN(nextAcct())(quantity.transactions)
+
+  //console.log(accounts)
+
+  const entities = {
+    users,
+    transactions,
+    accounts,
+  }
+  console.log(entities)
+  return entities
 }

@@ -3,7 +3,7 @@ import { Route } from "react-router-dom";
 
 import App from "components/App";
 import ErrorBoundary from "components/ErrorBoundary";
-import { renderLoader } from "components/Router/renderLoader";
+import { renderLoader } from "components/Loading";
 
 const renderEnv = match => {
   return <h2>Environment: {match.params.env}</h2>;
