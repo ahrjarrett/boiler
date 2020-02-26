@@ -4,69 +4,83 @@ import styled from "styled-components";
 import { APP_NAME } from "config";
 import * as S from "./styled";
 
-let id = 0;
+let id = 8;
+const makeId = () => id++;
+
+const colNames = ["winnie", "bob", "thomas", "george"];
 
 const dbColumns = {
-  winnie: { name: "winnie", color: "#8E6E95" },
-  bob: { name: "bob", color: "#39A59C" },
-  thomas: { name: "thomas", color: "#344759" },
-  george: { name: "george", color: "#E8741E" }
+  0: { name: "winnie", color: "#8E6E95", id: 0 },
+  1: { name: "bob", color: "#39A59C", id: 1 },
+  2: { name: "thomas", color: "#344759", id: 2 },
+  3: { name: "george", color: "#E8741E", id: 3 }
 };
 
-const dbCards = [
-  {
-    id: id++,
-    content: "bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
+const dbCards = {
+  0: {
+    id: 0,
+    content: "0 bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
     column: "winnie"
   },
-  {
-    id: id++,
-    content: "bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
+  1: {
+    id: 1,
+    content: "1 bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
     column: "winnie"
   },
-  {
-    id: id++,
+  2: {
+    id: 2,
+    content: "2 bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
+    column: "bob"
+  },
+  3: {
     id: 3,
-    content: "bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
+    content: "3 bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
     column: "bob"
   },
-  {
+  4: {
     id: 4,
-    id: id++,
-    content: "bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
-    column: "bob"
+    content: "4 bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
+    column: "thomas"
   },
-  {
+  5: {
     id: 5,
-    id: id++,
-    content: "bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
+    content: "5 bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
     column: "thomas"
   },
-  {
+  6: {
     id: 6,
-    id: id++,
-    content: "bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
-    column: "thomas"
-  },
-  {
-    id: 7,
-    id: id++,
-    content: "bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
+    content: "6 bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
     column: "george"
   },
-  {
-    id: 8,
-    id: id++,
-    content: "bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
+  7: {
+    id: 7,
+    content: "7 bbuy eggs buy eggs buy eggs buy eggs buy eggs uy eggs ",
     column: "george"
   }
-];
+};
 
-function Card({ card, column }) {
+function Card({ card, columnName, columnId, setCards }) {
+  const handleMoveCard = (direction, column) => e => {
+    const newIndex = columnId + (direction === "left" ? -1 : 1);
+    const newColumnIndex =
+      newIndex < 0 ? 4 + newIndex : newIndex > 3 ? newIndex - 4 : newIndex;
+
+    setCards(cs => ({
+      ...cs,
+      [card.id]: { ...card, column: colNames[newColumnIndex] }
+    }));
+  };
+
   return (
     <div>
-      <p>
-        {card.content} <span className="arrow"> Arrow</span>
+      <p style={{ display: "flex" }}>
+        <span onClick={handleMoveCard("left", columnId)} className="arrow">
+          ←
+        </span>
+        {card.content}
+        <span onClick={handleMoveCard("right", columnId)} className="arrow">
+          →
+        </span>
       </p>
     </div>
   );
@@ -77,10 +91,10 @@ function Column({ cards, setCards, column }) {
 
   const handleClick = e => {
     const content = window.prompt("enter new card");
-    const newCard = { id: id++, content, column: column.name };
+    const id = makeId();
+    const newCard = { id, content, column: column.name };
 
-    console.log("newCard", newCard);
-    setCards(prevCards => [...prevCards, newCard]);
+    setCards(prevCards => ({ ...prevCards, [id]: newCard }));
   };
 
   return (
@@ -101,10 +115,17 @@ function Column({ cards, setCards, column }) {
         <span>{name}</span>
       </div>
       <li>
-        {cards
+        {Object.keys(cards)
+          .map(key => cards[key])
           .filter(card => card.column === name)
           .map(card => (
-            <Card key={card.id} card={card} column={column} />
+            <Card
+              key={card.id}
+              card={card}
+              columnName={column.name}
+              columnId={column.id}
+              setCards={setCards}
+            />
           ))}
       </li>
       <button onClick={handleClick}>+ Add a new card</button>
@@ -116,13 +137,14 @@ export default function App() {
   const [columns, setColumns] = useState(dbColumns);
   // TODO: Refactor to have each column manage own list of cards, so app doesn't re-render unnecessarily
   const [cards, setCards] = useState(dbCards);
-  //const [state, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
     const body = document.querySelector("body");
     window.body = body;
     body.style.margin = 0;
   }, []);
+
+  useEffect(() => console.log(cards));
 
   return (
     <div
