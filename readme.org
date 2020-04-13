@@ -1,0 +1,4 @@
+
+* boiler
+
+this is a repo with defaults that i like for starting a greenfield project.
